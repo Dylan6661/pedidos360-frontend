@@ -56,8 +56,25 @@ export class AuthStateService {
       .subscribe(() => this.syncAccount());
   }
 
-  login(): void {
-    this.msal.loginRedirect({ scopes: loginScopes }).subscribe();
+  /**
+   * Inicia sesion (o registro). prompt=select_account permite elegir o crear otra cuenta
+   * aunque exista una sesion previa en el tenant.
+   */
+  login(retry = true): void {
+    this.msal.loginRedirect({ scopes: loginScopes, prompt: 'select_account' }).subscribe({
+      error: (err: { errorCode?: string }) => {
+        // Si un login anterior quedo a medias, MSAL bloquea nuevos intentos: se limpia el estado y se reintenta
+        if (retry && err?.errorCode === 'interaction_in_progress') {
+          Object.keys(sessionStorage)
+            .filter((k) => k.includes('interaction.status') || k.includes('request.params'))
+            .forEach((k) => sessionStorage.removeItem(k));
+          this.broadcast.resetInProgressEvent();
+          this.login(false);
+        } else {
+          console.error('No se pudo iniciar sesion', err);
+        }
+      },
+    });
   }
 
   logout(): void {
