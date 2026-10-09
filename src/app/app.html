@@ -1,0 +1,34 @@
+<header class="topbar">
+  <a class="brand" routerLink="/">Pedidos<span>360</span></a>
+
+  @if (auth.isLoggedIn()) {
+    <nav class="nav">
+      <a routerLink="/catalogo" routerLinkActive="active">Catálogo</a>
+      <a routerLink="/pedidos" routerLinkActive="active">{{ auth.isAdmin() ? 'Pedidos' : 'Mis pedidos' }}</a>
+      <a routerLink="/perfil" routerLinkActive="active">Mi perfil</a>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/productos" routerLinkActive="active">Productos</a>
+        <a routerLink="/admin/clientes" routerLinkActive="active">Clientes</a>
+      }
+    </nav>
+    <div class="session">
+      <span class="user">
+        {{ auth.displayName() }}
+        @for (role of auth.roles(); track role) {
+          <span class="badge">{{ role }}</span>
+        }
+      </span>
+      <button class="btn btn-ghost" (click)="auth.logout()">Cerrar sesión</button>
+    </div>
+  } @else {
+    <div class="session">
+      <button class="btn" (click)="auth.login()">Iniciar sesión / Crear cuenta</button>
+    </div>
+  }
+</header>
+
+<main class="container">
+  <router-outlet />
+</main>
+
+<footer class="footer">Pedidos360 · DSY1107 Desarrollo Cloud Native I</footer>
