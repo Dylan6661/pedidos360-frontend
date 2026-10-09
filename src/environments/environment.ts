@@ -5,10 +5,10 @@ export const environment = {
   msal: {
     // Application (client) ID de la app SPA "pedidos360-spa"
     clientId: '455035c0-795b-4b3b-8849-493674aaef03',
-    // Authority de Entra External ID: https://<subdominio>.ciamlogin.com/
-    authority: 'https://pedidos360dylan.ciamlogin.com/',
-    knownAuthorities: ['pedidos360dylan.ciamlogin.com'],
-    // URL pública del frontend (CloudFront / Amplify)
+    // Authority con el ID del tenant: asi coincide con el issuer del token (MSAL valida issuer)
+    authority: 'https://pedidos360dylan.ciamlogin.com/57c9047d-aff2-4c1a-bc9e-04d8b605b23f/',
+    knownAuthorities: ['pedidos360dylan.ciamlogin.com', '57c9047d-aff2-4c1a-bc9e-04d8b605b23f.ciamlogin.com'],
+    // URL pública del frontend (HTTPS)
     redirectUri: 'https://<URL_FRONTEND>/',
     postLogoutRedirectUri: 'https://<URL_FRONTEND>/',
   },
